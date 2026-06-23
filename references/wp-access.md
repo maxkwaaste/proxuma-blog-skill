@@ -65,9 +65,15 @@ $SSH "cd $WP_ROOT && wp post get 7055 --field=post_content" > /tmp/ref-7055.html
 # read post meta you must mirror
 $SSH "cd $WP_ROOT && wp post meta list <id>"
 
-# set Yoast primary category + og:image
+# set Yoast primary category
 $SSH "cd $WP_ROOT && wp post meta update <id> _yoast_wpseo_primary_category 10"
+
+# featured image: there is NO `wp post thumbnail` command in core wp-cli; set the meta directly
+$SSH "cd $WP_ROOT && wp post meta update <id> _thumbnail_id <media-id>"
+
+# og:image (Yoast social): set both the URL and the id
 $SSH "cd $WP_ROOT && wp post meta update <id> _yoast_wpseo_opengraph-image-id <media-id>"
+$SSH "cd $WP_ROOT && wp post meta update <id> _yoast_wpseo_opengraph-image <media-url>"
 
 # safe-mode cleanup
 $SSH "cd $WP_ROOT && wp post delete <id> --force"

@@ -183,7 +183,7 @@ Gotchas: $wpdb->update for body edits (never wp_update_post). Guard wpautop. Ver
 STEPS
 1. Inventory the image sets. Confirm an EN set and a NL set exist, each with hero (1200x630) + the in-body visuals. If only one language set exists, STOP and report; never put English-labelled images on the Dutch post.
 2. Upload to media: wp media import <file> --title=... --alt="...". Alt text: brand voice, sentence case, include the key figure. One upload per language per image.
-3. Featured hero: set the localized hero per post, replacing any interim placeholder. If this changes a live post's hero, call it out for Max.
+3. Featured hero: set the localized hero per post, replacing any interim placeholder. Core wp-cli has NO `wp post thumbnail` command, so set the meta directly: `wp post meta update <id> _thumbnail_id <media-id>` (then verify it reads back). If this changes a live post's hero, call it out for Max.
 4. In-body placement: if a post already has in-body <img> tags, replace their src in the SAME position; else insert each as
    <figure style="margin:32px 0;text-align:center"><img src="..." alt="..." style="max-width:100%;height:auto;border-radius:12px"><figcaption style="font:400 14px Inter;color:#5C5C71;margin-top:8px">caption</figcaption></figure>
    at the matching narrative position (match by surrounding text, identically EN and NL).

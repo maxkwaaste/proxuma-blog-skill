@@ -30,24 +30,52 @@ draft (the URL 404s, so no one is there).
          cp proxuma-hreflang.php   proxuma-hreflang.php.bak.$TS && ls -la *.bak.$TS"
    ```
 
-2. **Read both plugins fully** before editing. Find the existing blog-pair entry (the live
-   pair is EN `the-msp-market-is-doubling-to-847-billion` <-> NL
-   `de-msp-markt-verdubbelt-naar-847-miljard`). Copy that exact shape for the new pair.
-
-3. **Add the pair to `proxuma-nl-redirect.php`** alongside the existing blog pair, both
-   directions, keeping the 404 / publish guard. Pattern (match the file's actual style):
+2. **Read both plugins fully** before editing. The live `proxuma-nl-redirect.php` holds the
+   blog pair as **three constants and two dedicated `if` blocks**, not a map:
    ```php
-   // blog pairs: EN slug => NL slug  (guarded; dormant until NL post is published)
-   $blog_pairs = array(
-       'the-msp-market-is-doubling-to-847-billion' => 'de-msp-markt-verdubbelt-naar-847-miljard',
-       '<EN_SLUG>' => '<NL_SLUG>',   // <-- the only line you add
-   );
+   define('PROXUMA_BLOG_EN', '/the-msp-market-is-doubling-to-847-billion');
+   define('PROXUMA_BLOG_NL', '/de-msp-markt-verdubbelt-naar-847-miljard');
+   define('PROXUMA_BLOG_NL_SLUG', 'de-msp-markt-verdubbelt-naar-847-miljard');
+   function proxuma_blog_nl_live() { /* true only when the NL post is published */ }
+   // inside proxuma_nl_redirect(): if ($norm === PROXUMA_BLOG_EN) {...}  if ($norm === PROXUMA_BLOG_NL) {...}
    ```
+   `proxuma-hreflang.php` holds the pair as a hardcoded `proxuma_hreflang_blog_pair()`
+   function. So adding a pair is NOT a one-line map entry; you mirror this structure.
 
-4. **Add the pair to `proxuma-hreflang.php`** (additive). Both posts should output
-   `hreflang en` / `nl` / `x-default` (x-default -> the EN URL), and the function should stay
-   a no-op for this pair until both posts are published. Leave the existing 432-pair page
-   logic and the existing blog pair untouched.
+3. **Add the pair to `proxuma-nl-redirect.php`, additively.** Lowest-risk pattern (verified
+   `php -l` clean, zero existing lines removed): add a parallel set of constants, a parallel
+   `proxuma_blog2_nl_live()` guard, and two parallel `if` blocks for the new pair. Touch
+   nothing existing:
+   ```php
+   /* Second blog pair -- ADDITIVE, existing pair untouched. */
+   define('PROXUMA_BLOG2_EN', '/<EN_SLUG>');
+   define('PROXUMA_BLOG2_NL', '/<NL_SLUG>');
+   define('PROXUMA_BLOG2_NL_SLUG', '<NL_SLUG>');
+
+   function proxuma_blog2_nl_live() {
+       $p = get_page_by_path(PROXUMA_BLOG2_NL_SLUG, OBJECT, 'post');
+       return $p && $p->post_status === 'publish';
+   }
+   // inside proxuma_nl_redirect(), after the existing blog blocks:
+   if ($norm === PROXUMA_BLOG2_EN) {
+       if (proxuma_resolve_lang() === 'nl' && proxuma_blog2_nl_live()) proxuma_do_redirect(PROXUMA_BLOG2_NL . '/');
+       return;
+   }
+   if ($norm === PROXUMA_BLOG2_NL) {
+       if (proxuma_resolve_lang() === 'en') proxuma_do_redirect(PROXUMA_BLOG2_EN . '/');
+       return;
+   }
+   ```
+   > For the third pair and beyond, prefer a one-time refactor to a
+   > `$proxuma_blog_pairs = [[EN, NL, NL_SLUG], ...]` array iterated in a loop, so each new
+   > article becomes a single array row. That refactor is a separate, tested change; for a
+   > single new pair the additive-mirror above is safest.
+
+4. **Add the pair to `proxuma-hreflang.php`** (additive). Mirror `proxuma_hreflang_blog_pair()`
+   with a second function (or generalize it to loop the same pairs array), emitting
+   `hreflang en` / `nl` / `x-default` (x-default -> the EN URL), staying a no-op until both
+   posts are published. Leave the existing page-pair hreflang logic and the existing blog
+   pair untouched.
 
 5. **Lint both files** before trusting them:
    ```bash
