@@ -1,0 +1,232 @@
+/* ============================================================
+   Proxuma — Color & Type tokens
+   Single source of truth for any new design or production code.
+   Resolved from `tailwind.config.js` + `_variables.scss` in the
+   proxuma-frontend Nuxt 3 codebase. Use the semantic vars
+   (--text-primary, --color-brand) in new work; the legacy
+   `--brand-*` aliases mirror the Tailwind class names exactly
+   so production code can be lifted in directly.
+   ============================================================ */
+
+/* ---------- 1. Webfonts (self-hosted Inter, 400/500/600/700) ---------- */
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('fonts/Inter-normal-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('fonts/Inter-normal-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('fonts/Inter-normal-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('fonts/Inter-normal-500-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('fonts/Inter-normal-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('fonts/Inter-normal-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('fonts/Inter-normal-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('fonts/Inter-normal-700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* ---------- 2. Color foundations ---------- */
+
+  /* — Brand —
+     The deep navy is everything: sidebar, primary button, headings,
+     wordmark. The cyan is the accent (links, focus rings, highlights). */
+  --color-brand:               #164387;   /* primary navy */
+  --color-brand-primary-hover: #0F3066;   /* hover/active on primary */
+  --color-brand-accent:        #00B7FF;   /* cyan accent */
+
+  /* — Foreground / text — */
+  --fg-primary:    #181833;   /* near-black for headings + body */
+  --fg-secondary:  #5C5C71;   /* labels, descriptions, secondary text */
+  --fg-muted:      #A4A6AA;   /* placeholders, metadata, disabled */
+  --fg-on-brand:   #FFFFFF;
+
+  /* — Surfaces — */
+  --surface-bg:     #FFFFFF;   /* card surface */
+  --surface-page:   #F8F8F8;   /* page background */
+  --surface-subtle: #F5F8FA;   /* grouped panels, sidebar links */
+  --surface-hover:  #EEF3F7;   /* row hover, ghost-button hover */
+
+  /* — Borders — */
+  --border-default: #DEE1E8;
+  --border-subtle:  #EBEDF2;
+
+  /* — Semantic (status colors used for fills + text) — */
+  --color-success:    #49C481;
+  --color-warning:    #F4C755;
+  --color-error:      #F1416C;
+  --color-error-dark: #C23458;
+  --color-green-soft: #E8FAEB;
+  --color-tomato:     #E1685D;
+
+  /* — Workflow status (solid fill + accessible text on light bg) —
+     These are the six PSA-aligned states Proxuma renders everywhere. */
+  --status-new:             #0D2CC6;  --status-new-text:        #2A3985;
+  --status-progress:        #2487E4;  --status-progress-text:   #1B4E7F;
+  --status-waiting:         #F39529;  --status-waiting-text:    #6F4515;
+  --status-scheduled:       #844BE5;  --status-scheduled-text:  #5120A4;
+  --status-complete:        #41AA70;  --status-complete-text:   #08552B;
+  --status-escalate:        #E94040;  --status-escalate-text:   #811D1D;
+  --status-approved:        #41AA70;  --status-approved-text:   #08552B;
+  --status-denied:          #E94040;  --status-denied-text:     #811D1D;
+  --status-general:         #27BFBD;  --status-general-text:    #084948;
+  --status-demo:            #C740E3;  --status-demo-text:       #631C72;
+
+  /* — Entity type badges (soft fill, primary text) — */
+  --badge-task:     #D2EBFF;   /* blue */
+  --badge-ticket:   #EBD7FF;   /* purple */
+  --badge-service:  #E8FAEB;   /* green */
+  --badge-time:     #FFE5E3;   /* coral */
+  --badge-time-off: #FFEDD8;   /* orange */
+  --badge-shift:    #E8F3FA;   /* light blue */
+
+  /* — Priority (tonal washes) — */
+  --prio-critical: #F1414169;
+  --prio-high:     #F17C4159;
+  --prio-medium:   #FFEBC1;
+  --prio-low:      #CDF2DE;
+
+  /* ---------- 3. Type — explicit ramp (matches tailwind.config) ---------- */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* size scale */
+  --fs-xs:   12px;
+  --fs-sm:   14px;
+  --fs-base: 16px;
+  --fs-lg:   20px;
+  --fs-xl:   24px;
+  --fs-2xl:  40px;
+
+  /* weights actually used in the app */
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* line-heights, matched to the .xx-yy text utility classes in scss/_text.scss */
+  --lh-xs:   16px;
+  --lh-sm:   20px;
+  --lh-base: 24px;
+  --lh-lg:   28px;
+  --lh-xl:   32px;
+  --lh-2xl:  48px;
+
+  /* ---------- 4. Radii, shadows, motion ---------- */
+  --r-sm:   4px;
+  --r-md:   6px;   /* inputs, kanban cards */
+  --r-lg:   8px;   /* default button radius */
+  --r-xl:   12px;
+  --r-2xl: 16px;   /* modals */
+  --r-pill: 100px; /* segmented tabs */
+
+  --shadow-card-calendar: 0px 1px 3px 0px rgba(24,24,51,0.08);
+  --shadow-card:          0px 2px 15px 0px rgba(24,24,51,0.14);
+  --shadow-kanban:        0px 2px 6px 0px rgba(24,24,51,0.20);
+  --shadow-active:        0px -2px 30px 0px rgba(24,24,51,0.20);
+  --shadow-selected:      0px 6px 20px 0px rgba(40,123,250,0.20);
+  --shadow-outline:       inset 0px 0px 0px 2px #164287;
+
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --dur-fast:   120ms;
+  --dur-base:   180ms;
+  --dur-slow:   240ms;
+
+  /* ---------- 5. Legacy aliases — mirror Tailwind class names ---------- */
+  /* These let you paste production code with `bg-brand`, `text-brand-primary`,
+     etc. and have it resolve without an extra mapping layer. */
+  --brand:               #164387;
+  --brand-accent:        #00B7FF;
+  --brand-primary:       #181833;
+  --brand-secondary:     #5C5C71;
+  --brand-gray-100:      #A4A6AA;
+  --brand-gray-200:      #DEE1E8;
+  --brand-gray-300:      #F5F8FA;
+  --brand-gray-400:      #A6ACBA;
+  --brand-bg:            #F8F8F8;
+  --brand-success:       #49C481;
+  --brand-soft-green:    #86D086;
+  --brand-warning:       #F4C755;
+  --brand-error:         #F1416C;
+  --brand-error-dark:    #C23458;
+  --brand-tomato:        #E1685D;
+  --brand-green-100:     #E8FAEB;
+
+  /* ---------- 6. Semantic role aliases (h1/h2/p/code) ---------- */
+  --text-primary:   var(--fg-primary);
+  --text-secondary: var(--fg-secondary);
+  --text-muted:     var(--fg-muted);
+}
+
+/* ============================================================
+   Element defaults — apply by linking this file and writing
+   ordinary HTML. Use the `.t-*` utility classes for the named
+   text styles documented in scss/_text.scss.
+   ============================================================ */
+
+html, body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-base);
+  color: var(--fg-primary);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11';
+}
+
+/* — Headings — semibold, tight tracking, no margin reset on purpose — */
+h1 { font-size: var(--fs-2xl); font-weight: var(--fw-semibold); line-height: var(--lh-2xl); letter-spacing: -0.02em; margin: 0; }
+h2 { font-size: var(--fs-xl);  font-weight: var(--fw-semibold); line-height: var(--lh-xl);  letter-spacing: -0.01em; margin: 0; }
+h3 { font-size: var(--fs-lg);  font-weight: var(--fw-semibold); line-height: var(--lh-lg);  margin: 0; }
+h4 { font-size: var(--fs-base);font-weight: var(--fw-semibold); line-height: var(--lh-base); margin: 0; }
+
+p  { margin: 0; font-size: var(--fs-base); line-height: var(--lh-base); color: var(--fg-primary); }
+
+a { color: var(--color-brand); text-decoration: none; transition: color var(--dur-fast) linear; }
+a:hover { color: var(--color-brand-primary-hover); }
+
+code, .mono { font-family: var(--font-mono); font-size: var(--fs-xs); }
+
+/* — Named text styles from scss/_text.scss — */
+.t-xs-normal   { font-size: var(--fs-xs);   font-weight: var(--fw-regular);  line-height: var(--lh-xs); }
+.t-xs-medium   { font-size: var(--fs-xs);   font-weight: var(--fw-medium);   line-height: var(--lh-xs); }
+.t-sm-normal   { font-size: var(--fs-sm);   font-weight: var(--fw-regular);  line-height: var(--lh-sm); }
+.t-sm-medium   { font-size: var(--fs-sm);   font-weight: var(--fw-medium);   line-height: var(--lh-sm); }
+.t-base-normal { font-size: var(--fs-base); font-weight: var(--fw-regular);  line-height: var(--lh-base); }
+.t-base-medium { font-size: var(--fs-base); font-weight: var(--fw-medium);   line-height: var(--lh-base); }
+.t-lg-normal   { font-size: var(--fs-lg);   font-weight: var(--fw-regular);  line-height: var(--lh-lg); }
+.t-lg-medium   { font-size: var(--fs-lg);   font-weight: var(--fw-medium);   line-height: var(--lh-lg); }
+.t-lg-semi     { font-size: var(--fs-lg);   font-weight: var(--fw-semibold); line-height: var(--lh-lg); }
+.t-xl-normal   { font-size: var(--fs-xl);   font-weight: var(--fw-regular);  line-height: var(--lh-xl); }
+.t-xl-medium   { font-size: var(--fs-xl);   font-weight: var(--fw-medium);   line-height: var(--lh-xl); }
+.t-xl-semi     { font-size: var(--fs-xl);   font-weight: var(--fw-semibold); line-height: var(--lh-xl); }
+.t-2xl-medium  { font-size: var(--fs-2xl);  font-weight: var(--fw-medium);   line-height: var(--lh-2xl); letter-spacing: -0.02em; }
+
+* { box-sizing: border-box; }

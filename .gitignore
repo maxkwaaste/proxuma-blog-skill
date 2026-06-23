@@ -1,0 +1,34 @@
+# Secrets and per-user config — NEVER commit these
+.env
+*.env
+config.env
+!.env.example
+secrets/
+*.key
+*.pem
+id_*
+*_rsa
+*_ed25519
+
+# Per-run scratch / build output (articles, charts, parsed JSON)
+*-parsed.json
+*-images/
+/tmp/
+scratch/
+out/
+
+# Backups of production files (should never be pulled into the repo)
+*.bak
+*.bak.*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Node (only used transiently by render_vega.sh via npx)
+node_modules/
+package-lock.json

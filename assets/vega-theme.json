@@ -1,0 +1,52 @@
+{
+  "_comment": "Proxuma Design System 2.0 -> Vega-Lite config. Merge this object into the `config` key of every data-chart spec (PATH A) so figures bind to real data and render on-brand and deterministically. Tokens are authoritative; do not introduce red/green or off-spec blues. Bad/negative = muted slate #8A93A6, never red. Emphasis = cyan #00B7FF, primary = navy #164387.",
+  "background": "#FFFFFF",
+  "font": "Inter",
+  "padding": 24,
+  "title": {
+    "font": "Inter",
+    "fontSize": 20,
+    "fontWeight": 600,
+    "color": "#181833",
+    "subtitleColor": "#5C5C71",
+    "subtitleFontSize": 14,
+    "anchor": "start",
+    "offset": 16
+  },
+  "axis": {
+    "labelFont": "Inter",
+    "labelFontSize": 13,
+    "labelColor": "#5C5C71",
+    "titleFont": "Inter",
+    "titleFontSize": 13,
+    "titleFontWeight": 600,
+    "titleColor": "#181833",
+    "gridColor": "#EBEDF2",
+    "gridWidth": 1,
+    "domainColor": "#DEE1E8",
+    "tickColor": "#DEE1E8",
+    "labelPadding": 6,
+    "titlePadding": 12
+  },
+  "axisX": { "grid": false },
+  "axisY": { "domain": false, "ticks": false },
+  "legend": {
+    "labelFont": "Inter",
+    "labelFontSize": 13,
+    "labelColor": "#5C5C71",
+    "titleFont": "Inter",
+    "titleColor": "#181833",
+    "symbolType": "square"
+  },
+  "view": { "stroke": "transparent" },
+  "range": {
+    "category": ["#164387", "#00B7FF", "#8A93A6", "#A4A6AA", "#0F3066", "#2487E4", "#844BE5", "#27BFBD"],
+    "ordinal": ["#DEE1E8", "#A4A6AA", "#8A93A6", "#2487E4", "#00B7FF", "#164387"],
+    "ramp": ["#DEE1E8", "#2487E4", "#00B7FF", "#164387", "#0F3066"]
+  },
+  "bar": { "color": "#164387", "cornerRadiusEnd": 3 },
+  "line": { "color": "#00B7FF", "strokeWidth": 3 },
+  "point": { "color": "#00B7FF", "filled": true, "size": 64 },
+  "rule": { "color": "#8A93A6" },
+  "text": { "font": "Inter", "color": "#181833", "fontSize": 13 }
+}
