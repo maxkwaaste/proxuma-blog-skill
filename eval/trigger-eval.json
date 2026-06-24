@@ -1,0 +1,23 @@
+[
+  {"query": "build the blog from ~/Downloads/proxuma-L1-cm-versie (1).html", "should_trigger": true},
+  {"query": "can you turn this content package into the EN and NL posts on proxuma.io? it's the html with the s1 and s1b sections", "should_trigger": true},
+  {"query": "maak de blog van dit artikel en zet de NL en EN versie als concept op proxuma.io", "should_trigger": true},
+  {"query": "/proxuma-blog ~/Downloads/intelligent-msp-exec-summary.html", "should_trigger": true},
+  {"query": "i've got a new article, draft it as two blog posts (english + dutch) on the site with the on-brand charts", "should_trigger": true},
+  {"query": "we only have the dutch version of this piece, make the english twin and build both drafts on proxuma.io, don't publish", "should_trigger": true},
+  {"query": "set up the bilingual blog drafts for the $847B MSP article, on-brand with og image, ready for me to review", "should_trigger": true},
+  {"query": "take this whitepaper summary and produce the two proxuma.io draft posts plus the EN<->NL routing pair", "should_trigger": true},
+  {"query": "ik heb een nieuw stuk content, bouw er twee blogposts van (NL en EN) op de site, concept, met de grafieken erbij", "should_trigger": true},
+  {"query": "publish a blog post pair from this article as drafts, structurally identical EN and NL, with the proxuma charts placed", "should_trigger": true},
+
+  {"query": "fix the EN/NL language redirect on proxuma.io for the powerbi report pages, it's not sending dutch visitors to the nl twin", "should_trigger": false},
+  {"query": "write me three linkedin posts and a cold DM from this blog article", "should_trigger": false},
+  {"query": "translate this dutch client email into english and send it via outlook", "should_trigger": false},
+  {"query": "generate a chart of our MSP margin per client for a slide i'm presenting tomorrow", "should_trigger": false},
+  {"query": "update the published body text of post 7055 on proxuma.io, there's a typo in the third paragraph", "should_trigger": false},
+  {"query": "make me a claudezakelijk page for the new pricing model", "should_trigger": false},
+  {"query": "review the css on the proxuma.io homepage hero section and suggest improvements", "should_trigger": false},
+  {"query": "what's the current yoast SEO title on our msp market blog post?", "should_trigger": false},
+  {"query": "create a new power BI report page on proxuma.io under the insights gallery", "should_trigger": false},
+  {"query": "draft an outlook email to a prospect linking to our intelligent MSP whitepaper", "should_trigger": false}
+]
