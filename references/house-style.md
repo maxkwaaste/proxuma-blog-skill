@@ -54,13 +54,9 @@ Poppins + #18a8f0; the brand is Inter + #00B7FF).
 
 ## Numbers (the gate)
 - Use the article's REAL figures. Never invent a statistic. If a chart needs illustrative
-  data, label it clearly "illustratief / illustrative".
+  data, label it clearly "illustrative".
 - After rendering, re-extract every figure and cite it to a source sentence, or mark it
   illustrative. Any unsourced or mismatched number fails the image.
-
-## Localization
-- Localize baked text per language (NL hero example: "$847 mld", "VANG DE GROEI",
-  "BLIJFT ACHTER", 2025/2033). Maintain an EN label set and a NL label set.
 
 ## Images / rendering
 - Code-rendered SVG/HTML to PNG. `render_vega.sh` (vega-cli, node-canvas) for data charts;

@@ -47,8 +47,8 @@ $SSH "cd $WP_ROOT && wp post list --post_type=post --posts_per_page=5"
 4. **Verifying public URLs past Cloudflare.** Origin-less `curl` can get a 202 challenge
    (Cloudflare challenges fake-Googlebot UAs), so do not trust raw curl for "is it published"
    checks. Prefer `wp post get <id> --field=post_status`, `get_page_by_path()` via a wp eval
-   script, or the wp-blog-header loopback. For redirect/header checks, `curl -sI` from a real
-   browser-like UA is fine; document how you simulated `CF-IPCountry` (it is edge-set).
+   script, or the wp-blog-header loopback. For header checks, `curl -sI` from a real
+   browser-like UA is fine.
 
 5. **Never use `wp_update_post` on report pages** either; the same markup-stripping applies
    site-wide. Gallery/report pages have extra rules outside this skill's scope.

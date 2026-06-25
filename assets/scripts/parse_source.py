@@ -4,22 +4,22 @@
 parse_source.py — turn a Proxuma content-package (or a plain article) into the
 structured JSON the blog pipeline builds from.
 
-Primary input is the content-package HTML we author: a <section id="s1"> holding
-the NL blog under the kicker "De blog", and a <section id="s1b"> holding the EN
-blog. Any other sections (the LinkedIn / e-mail / video / DM cascade) are ignored.
+Primary input is the content-package HTML we author: a <section id="s1b"> holding
+the EN blog. Any other sections (the Dutch <section id="s1">, the LinkedIn / e-mail
+/ video / DM cascade) are ignored.
 
-Also handles a plainer single-article HTML file: if no s1/s1b sections exist, the
-whole document body is parsed as one post and its language is read from <html lang>.
+Also handles a plainer single-article HTML file: if no s1b section exists, the
+whole document body is parsed as one English post.
 
 Usage:
     python3 parse_source.py "<path-to-source.html>" [--out parsed.json]
 
 Output JSON shape:
 {
-  "languages": ["nl", "en"],
+  "languages": ["en"],
   "posts": {
-    "nl": {
-      "lang": "nl",
+    "en": {
+      "lang": "en",
       "title": "...",
       "lede": "...",
       "blocks": [ {"type":"h", "text":"..."},
@@ -29,8 +29,7 @@ Output JSON shape:
       "cta": {"headline":"...", "body":"...", "links":["https://..."]},
       "links": ["https://..."],
       "numbers": ["$847.41 billion", "9.9%", "80%", "215", "180", ...]
-    },
-    "en": { ... }
+    }
   }
 }
 
@@ -65,7 +64,7 @@ def _links(frag):
     return re.findall(r'href="([^"]+)"', frag)
 
 # numbers worth flagging for the numeric gate: currency, percentages, multipliers, bare counts
-_NUM = re.compile(r"(\$[\d.,]+\s?(?:billion|miljard|million|miljoen|mld|mln|B|M|K)?|"
+_NUM = re.compile(r"(\$[\d.,]+\s?(?:billion|million|B|M|K)?|"
                   r"\d[\d.,]*\s?%|\d[\d.,]*\s?(?:×|x)\b|\b\d{2,}\b)")
 
 def _numbers(text):
@@ -118,10 +117,6 @@ def parse_post(blog_html, lang):
     post["numbers"] = _numbers(" ".join([post["lede"]] + all_text))
     return post
 
-def detect_lang(doc, default="en"):
-    m = re.search(r'<html\b[^>]*\blang="([a-zA-Z-]+)"', doc)
-    return (m.group(1).split("-")[0].lower() if m else default)
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("source")
@@ -131,17 +126,14 @@ def main():
     doc = open(args.source, encoding="utf-8").read()
     posts = {}
 
-    nl_sec, en_sec = _section(doc, "s1"), _section(doc, "s1b")
-    if nl_sec or en_sec:
-        if nl_sec:
-            posts["nl"] = parse_post(_blog_inner(nl_sec), "nl")
-        if en_sec:
-            posts["en"] = parse_post(_blog_inner(en_sec), "en")
+    en_sec = _section(doc, "s1b")
+    if en_sec:
+        # Content-package: parse only the EN blog (s1b); the Dutch s1 is ignored.
+        posts["en"] = parse_post(_blog_inner(en_sec), "en")
     else:
-        # Plain single-article fallback: parse the whole body.
+        # Plain single-article fallback: parse the whole body as the English post.
         body = re.search(r"<body\b[^>]*>(.*)</body>", doc, re.DOTALL | re.IGNORECASE)
-        lang = detect_lang(doc)
-        posts[lang] = parse_post(body.group(1) if body else doc, lang)
+        posts["en"] = parse_post(body.group(1) if body else doc, "en")
 
     result = {"languages": list(posts.keys()), "posts": posts}
     out = json.dumps(result, ensure_ascii=False, indent=2)

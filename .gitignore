@@ -32,3 +32,4 @@ Thumbs.db
 # Node (only used transiently by render_vega.sh via npx)
 node_modules/
 package-lock.json
+__pycache__/
