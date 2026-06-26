@@ -38,7 +38,7 @@ STRUCTURAL TEMPLATE
   - section headings -> the reference's heading level (h2).
   - pull-quote -> the reference's cyan #00B7FF left-border pull block. Never drop it.
   - the numbered data-checks -> the reference's white check-cards with cyan number chips.
-  - closing CTA question + branded CTA card -> same card markup, same colors/fonts, same demo link (https://meetings-eu1.hubspot.com/proxuma/demo2).
+  - closing CTA question + branded CTA card -> same card markup, same colors/fonts, and MIRROR THE REFERENCE CTA BUTTON VERBATIM (its href + label). The reference card's button is "Read the full whitepaper ->" pointing at the whitepaper page (https://proxuma.io/intelligent-msp-unlocking-ai-driven-growth-through-operational-excellence/). Do NOT swap it for a demo/booking link. Only change the button if the SOURCE ARTICLE's own CTA names a different primary action verbatim (e.g. it says "book a demo" as the lead ask) - in that case use the article's action, otherwise keep the reference whitepaper button as-is.
 
 STEPS
 1. Map the parsed blocks 1:1 onto the reference structure, copy verbatim. Keep proper nouns as-is (Autotask, RMM, Cooper Copilot, Proxuma, Dxfferent).
@@ -48,7 +48,7 @@ STEPS
 5. Write the body via $wpdb->update on the new post ID. Re-read it back and confirm the divs/h2 survived (wpautop did not wrap them).
 6. Yoast: an SEO title + meta description, concise, featuring the article's key terms (for the MSP article: "AI-ready", "Autotask", "MSP"). Keep the post a DRAFT.
 7. Caches: wp cache flush && wp sg purge; Cloudflare purge is manual.
-8. VERIFY: open the draft preview, screenshot it, confirm: styled lede, all section headings, the pull-quote, the formatted checks, and the CTA card with working demo link. Report the new post ID, preview URL, and screenshot. Leave it as a draft.
+8. VERIFY: open the draft preview, screenshot it, confirm: styled lede, all section headings, the pull-quote, the formatted checks, and the CTA card whose button matches the reference (the whitepaper link, unless the source article specified a different action). Report the new post ID, preview URL, and screenshot. Leave it as a draft.
 
 CTA COPY FLAG: if the source has no marketing copy for the CTA card, keep the reference card text as interim and FLAG it for human copy. Do not invent the marketing line.
 
@@ -113,7 +113,7 @@ POLISH (words unchanged):
 3. Section headings: Inter semibold, navy #164387, letter-spacing -0.01em, ~36px top / ~12px bottom margin.
 4. The numbered checks: a stack of white cards (#FFFFFF, 1px #DEE1E8, radius 12, padding 18px) with the number in a small cyan/navy chip (radius 6).
 5. Body: Inter, #181833, line-height ~1.65. Links cyan #00B7FF.
-6. CTA card: Inter, accent cyan #00B7FF, primary navy #164387. Keep copy + demo link exactly.
+6. CTA card: Inter, accent cyan #00B7FF, primary navy #164387. Keep copy + the CTA button href/label exactly as the reference (the whitepaper link by default).
 
 PROCESS: back up the post's current post_content first. Write via $wpdb->update; re-read and confirm wpautop did not wrap. Caches: wp cache flush && wp sg purge. VERIFY with a screenshot, confirm on-brand rendering, report a short diff.
 ```
@@ -158,7 +158,7 @@ CHECKS
 2. Rendering: screenshot full-length. No broken layout; lede/pull-quote/check-cards/CTA on-brand (Inter, navy #164387, cyan #00B7FF); images present and crisp.
 3. Images: featured set; og:image resolves (check og:image meta). In-body figures in matching positions.
 4. SEO: Yoast title + meta description present; canonical correct; the slug is <EN_SLUG>.
-5. Links: the CTA demo link and any in-body links return 200.
+5. Links: the CTA button link (the whitepaper page by default) and any in-body links return 200.
 
 DELIVERABLE: a short PASS/FAIL report per check with evidence (screenshots, curl -I). List anything that must be fixed before publishing. If all passes, say so and note the post is ready for Max to flip from draft to publish (do NOT publish it yourself).
 ```
