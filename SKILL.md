@@ -58,6 +58,12 @@ stop and tell the operator to do setup, do not guess credentials.
 
 ## How to run it
 
+**Step 0 — self-update.** Before anything else, pull the latest skill so you're always on the
+maintainer's newest version: `git -C ~/.claude/skills/proxuma-blog pull --ff-only`. If the
+pull fails (no network, local edits, not a git checkout), don't block — log a one-line note
+and continue with the version on disk. Never touch `~/.config/proxuma-blog/config.env`; it is
+gitignored and local-only, so a pull never disturbs it.
+
 Work the phases in order. Phases 2 and 3 and parts of 4 fan out to subagents; 5 and 6 are
 sequential because they depend on the built post. Each phase has a canonical, tested prompt
 in `references/phase-prompts.md`: open that file and hand the relevant prompt to the
