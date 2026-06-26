@@ -42,8 +42,8 @@ STRUCTURAL TEMPLATE
 
 STEPS
 1. Map the parsed blocks 1:1 onto the reference structure, copy verbatim. Keep proper nouns as-is (Autotask, RMM, Cooper Copilot, Proxuma, Dxfferent).
-2. Create the post: post_type=post, post_status=draft, title "<TITLE>", post_name <SLUG>. Category Blogs (term_id 10); set _yoast_wpseo_primary_category = 10.
-3. Mirror the reference post meta exactly (copy values from <REF_TEMPLATE_ID>): show_c2a, show_author (0), hide_header, hide_footer, hide_breadcrumbs, source, reviewedby.
+2. Create the post: post_type=post, post_status=draft, title "<TITLE>", post_name <SLUG>. Category Blogs (term_id 10); set _yoast_wpseo_primary_category = 10. AUTHOR: set post_author = 4 (Max de Kwaasteniet). Bart van der Meer (user 12) must NEVER be the author of any Proxuma blog post. If the new post lands on any other author, fix it with `$wpdb->update($wpdb->posts, ['post_author'=>4], ['ID'=><newid>])` (pure column update, never wp_update_post). Acceptable authors only, in order of preference: Max de Kwaasteniet (4) > Proxuma (a Proxuma-named user if one exists) > Jasper van Horssen (2). Default to Max.
+3. Mirror the reference post meta exactly (copy values from <REF_TEMPLATE_ID>): show_c2a, hide_header, hide_footer, hide_breadcrumbs, source. EXCEPT set these two explicitly for E-E-A-T (do NOT copy the reference's blank values): reviewedby = 2 via `update_field('reviewedby', 2, <newid>)` (Jasper van Horssen, the expert reviewer), AND show_author = 1 via `update_field('show_author', 1, <newid>)`. show_author MUST be 1 — the theme renders the visible "✓ This article is reviewed by:" byline ONLY inside the `if($show_author)` block in single.php, so reviewedby alone is invisible without it. With show_author=1 the post shows the author (Max) and the reviewer (Jasper) — the intended author + expert-reviewer E-E-A-T pairing.
 4. Featured image: set the interim hero (the reference's hero) ONLY as a placeholder; the chart pipeline supplies the final hero. Flag that the final hero is still required. Do not invent or AI-generate a hero.
 5. Write the body via $wpdb->update on the new post ID. Re-read it back and confirm the divs/h2 survived (wpautop did not wrap them).
 6. Yoast: an SEO title + meta description, concise, featuring the article's key terms (for the MSP article: "AI-ready", "Autotask", "MSP"). Keep the post a DRAFT.
@@ -159,6 +159,7 @@ CHECKS
 3. Images: featured set; og:image resolves (check og:image meta). In-body figures in matching positions.
 4. SEO: Yoast title + meta description present; canonical correct; the slug is <EN_SLUG>.
 5. Links: the CTA button link (the whitepaper page by default) and any in-body links return 200.
+6. Author + reviewer (E-E-A-T): post_author = 4 (Max de Kwaasteniet). Bart van der Meer (user 12) must appear NOWHERE — FAIL if "Bart van der Meer" is anywhere on the page. show_author = 1 and reviewedby = 2, so the rendered page shows the "✓ This article is reviewed by: Jasper van Horssen" byline AND Max as author. Confirm both names render and Bart does not.
 
 DELIVERABLE: a short PASS/FAIL report per check with evidence (screenshots, curl -I). List anything that must be fixed before publishing. If all passes, say so and note the post is ready for Max to flip from draft to publish (do NOT publish it yourself).
 ```
