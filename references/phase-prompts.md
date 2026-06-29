@@ -67,14 +67,14 @@ GUARDRAILS
 ## Prompt 3.1 — Data charts via Vega-Lite spec + numeric gate (canonical)
 
 ```
-TASK: Generate the in-article visuals for the Proxuma blog post with two production paths and a numeric-accuracy gate. Charts with real plotted numbers are NOT hand-written SVG: emit a Vega-Lite spec and let the Vega engine bind the data and render, so figures are never transcribed into pixel coordinates. Diagrams and callouts stay HTML/CSS rendered via headless Chromium. Everything is monochrome on-brand and passes a numeric re-extraction gate. NO Nano Banana / no AI image model for anything containing a number.
+TASK: Generate the in-article visuals for the Proxuma blog post with two production paths and a numeric-accuracy gate. Charts with real plotted numbers are NOT hand-written SVG: emit a Vega-Lite spec and let the Vega engine bind the data and render, so figures are never transcribed into pixel coordinates. Diagrams and callouts stay HTML/CSS rendered via headless Chromium. Everything is on-brand (monochrome navy/cyan by default; sanctioned semantic accents — teal/mint-green/amber/red — only where color carries meaning, see step 3) and passes a numeric re-extraction gate. NO Nano Banana / no AI image model for anything containing a number.
 
 WHY: hand-placing numbers in SVG causes drift + overlap; spec-driven charts bind real data and render deterministically; spec-validity does NOT prove numeric correctness, so a re-extraction gate is mandatory.
 
 PATH A — DATA CHARTS (anything plotting real values)
 1. Build a data table of the REAL figures (from <PARSED> / the article) as JSON rows.
 2. Emit a Vega-Lite v5 JSON spec that binds that table via encodings; never type a value into an x/y pixel.
-3. Merge assets/vega-theme.json into the spec's `config` (navy #164387, cyan #00B7FF emphasis, muted slate #8A93A6 for negative/below, greys, Inter, hairline gridlines #EBEDF2, axis text #5C5C71; no red/green).
+3. Merge assets/vega-theme.json into the spec's `config` (navy #164387, cyan #00B7FF emphasis, muted slate #8A93A6 for neutral-bad, greys, Inter, hairline gridlines #EBEDF2, axis text #5C5C71). Default monochrome. When the comparison is genuinely good-vs-bad you MAY use the SEMANTIC accents from the theme's `_semantic` block (mint-green #00D9A5 / emerald #059669 / teal #0F766E = positive, red #DC2626 = negative, amber #F59E0B = caution) — one pairing per chart, for meaning only. See house-style.md "Semantic accents". Never off-spec blues; never color for decoration.
 4. Schema-validate; on error read the message, fix, retry up to 5x.
 5. Render: assets/scripts/render_vega.sh <spec>.vl.json 2  (vega-cli, node-canvas, no browser). Dark bg for a hero chart, light for in-body.
 
@@ -89,7 +89,7 @@ After rendering, re-extract every figure that appears in the image into {value, 
 RENDER + SELF-CHECK LOOP (per image, fix until all pass)
 [ ] Charts came from a validated Vega-Lite spec bound to a real data table (no hand-placed numbers).
 [ ] Numeric gate passed: every figure cited to a source sentence, or labelled illustrative.
-[ ] Only navy / cyan / greyscale. No red, green, coral, orange.
+[ ] Monochrome by default (navy / cyan / greyscale). Any color beyond that is a sanctioned semantic accent (teal/mint-green/amber/red per house-style "Semantic accents") used for MEANING only — one pairing, no rainbow, no off-spec blues, no decorative color.
 [ ] No text overlaps any mark; no clipping; nothing crosses the 64px safe area; card borders fully visible.
 [ ] Inter rendered (not a fallback); dark-hero / light-in-body consistent across the set.
 [ ] Any Proxuma wordmark is the REAL bundled logo (assets/proxuma-logo.css / assets/logos/), white-on-dark, color/black-on-light — NOT hand-typed text. Eyeball the logo region; if it reads as text, re-render.

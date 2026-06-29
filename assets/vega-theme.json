@@ -1,5 +1,15 @@
 {
-  "_comment": "Proxuma Design System 2.0 -> Vega-Lite config. Merge this object into the `config` key of every data-chart spec (PATH A) so figures bind to real data and render on-brand and deterministically. Tokens are authoritative; do not introduce red/green or off-spec blues. Bad/negative = muted slate #8A93A6, never red. Emphasis = cyan #00B7FF, primary = navy #164387.",
+  "_comment": "Proxuma Design System 2.0 -> Vega-Lite config. Merge this object into the `config` key of every data-chart spec (PATH A) so figures bind to real data and render on-brand and deterministically. DEFAULT is monochrome: primary = navy #164387, emphasis = cyan #00B7FF, neutral-bad = muted slate #8A93A6. Use the SEMANTIC accents in `_semantic` (teal/mint-green/amber/red, from the supplied source blogs) ONLY when color carries meaning — positive vs negative, good path vs traditional/slow path, a warning. Never use off-spec blues; never use color decoratively.",
+  "_semantic": {
+    "positive":     "#00D9A5",
+    "positiveDeep": "#059669",
+    "teal":         "#0F766E",
+    "tealLight":    "#CCFBF1",
+    "warning":      "#F59E0B",
+    "warningDeep":  "#B45309",
+    "negative":     "#DC2626",
+    "neutralBad":   "#8A93A6"
+  },
   "background": "#FFFFFF",
   "font": "Inter",
   "padding": 24,

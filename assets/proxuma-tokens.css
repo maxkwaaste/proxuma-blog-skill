@@ -84,6 +84,22 @@
   --color-green-soft: #E8FAEB;
   --color-tomato:     #E1685D;
 
+  /* — Source-blog accents (the teal / mint-green / amber / red set used in EVERY
+     supplied content-package blog's :root. Sanctioned for chart + diagram SEMANTICS:
+     monochrome navy/cyan stays the default; reach for these only when color carries
+     meaning — positive vs negative, the good path vs the traditional/slow path, a warning. */
+  --accent-teal:       #0F766E;   /* Proxuma teal — secondary brand / the "operate" tone */
+  --accent-teal-light: #CCFBF1;   /* pale teal wash / fills */
+  --accent-teal-deep:  #06403A;   /* deep teal on dark backgrounds */
+  --accent-green:      #00D9A5;   /* bright mint — positive / win / the good path (emphasis) */
+  --accent-green-deep: #059669;   /* emerald — positive text/stroke on light */
+  --accent-green-soft: #ECFDF6;   /* pale mint background */
+  --accent-amber:      #F59E0B;   /* amber — warning / attention */
+  --accent-amber-deep: #B45309;   /* dark amber — amber text on light */
+  --accent-amber-soft: #FFF4E6;   /* pale amber background */
+  --accent-red:        #DC2626;   /* red — negative / loss / the traditional (bad) path */
+  --accent-red-soft:   #FDE0E0;   /* pale red background */
+
   /* — Workflow status (solid fill + accessible text on light bg) —
      These are the six PSA-aligned states Proxuma renders everywhere. */
   --status-new:             #0D2CC6;  --status-new-text:        #2A3985;

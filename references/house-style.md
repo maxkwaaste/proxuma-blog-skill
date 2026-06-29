@@ -11,12 +11,25 @@ Poppins + #18a8f0; the brand is Inter + #00B7FF).
 - Text: `#181833` primary · `#5C5C71` secondary · `#A4A6AA` muted
 - Surfaces: page `#F8F8F8` · card `#FFFFFF` · subtle `#F5F8FA`
 - Border: `#DEE1E8` hairline 1px (borders carry more weight than shadows)
-- Data semantics: up/positive `#49C481` · warning `#F4C755` · down/negative `#F1416C`
 - Categorical series order: `#0D2CC6` · `#2487E4` · `#00B7FF` · `#844BE5` · `#27BFBD` · `#F39529` · `#41AA70` · `#E94040`
 
-> For charts the working monochrome rule is stricter than the full palette: navy + cyan +
-> greyscale, with **muted slate `#8A93A6` for "bad"/below**, never red or green. Reserve the
-> red/green data-semantic colors for UI, not blog charts.
+### Semantic accents (the supplied-blog set — teal / mint-green / amber / red)
+
+Every supplied content-package blog ships one identical `:root` palette, and it leans on a
+warmer semantic set than bare navy+cyan. These are **sanctioned** for blog visuals — use them
+when **color carries meaning**, not decoration:
+
+- Teal `#0F766E` (Proxuma teal) · light `#CCFBF1` · deep `#06403A` — secondary brand / the "operate" tone.
+- Positive / win / good path: mint-green `#00D9A5` (emphasis), emerald `#059669` (text/stroke on light), wash `#ECFDF6`.
+- Warning / attention: amber `#F59E0B`, deep `#B45309` (text on light), wash `#FFF4E6`.
+- Negative / loss / the traditional (slow) path: red `#DC2626`, wash `#FDE0E0`.
+
+> **Monochrome-first still holds.** Default a chart/diagram to navy + cyan + greyscale with
+> muted slate `#8A93A6` for neutral-bad. Introduce a semantic accent ONLY where it earns its
+> meaning: green/teal for the Proxuma/good outcome, red for the traditional/bad one, amber for
+> a caution. One semantic pairing per visual (e.g. teal-green vs red, or navy vs amber); never
+> a rainbow. The tokens live in `assets/proxuma-tokens.css` (`--accent-*`) and the Vega config
+> exposes them under `_semantic` in `assets/vega-theme.json`.
 
 ## Type
 - **Inter** (self-hosted woff2 in `assets/fonts/`, weights 400/500/600/700, `font-feature-settings:'cv11'`)
@@ -55,7 +68,11 @@ produces an off-brand half-cyan/half-white blob. Always embed the real logo file
   (`render_vega.sh`), never hand-placed numbers. Diagrams/callouts are HTML/CSS
   (`render_png.sh`). All numbers, axes, labels, series bind to REAL data.
 - One emphasis color per chart; everything else greyscale until meaning needs color.
-- Primary metric = navy `#164387` or cyan `#00B7FF`. Below/bad = muted slate `#8A93A6`.
+- Primary metric = navy `#164387` or cyan `#00B7FF`. Neutral-bad = muted slate `#8A93A6`.
+- When the comparison is genuinely good-vs-bad, you MAY use the semantic accents (see "Semantic
+  accents" above): mint-green `#00D9A5` / emerald `#059669` / teal `#0F766E` for the positive
+  side, red `#DC2626` for the negative, amber `#F59E0B` for a caution. One pairing per chart,
+  for meaning only — otherwise stay monochrome.
 - Gridlines `#EBEDF2`; axis text `#5C5C71`; value labels `#181833`.
 
 ## Backgrounds
