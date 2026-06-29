@@ -31,6 +31,25 @@ Poppins + #18a8f0; the brand is Inter + #00B7FF).
 - Unicode arrows for trends. Trailing-period flourish on hero headlines only.
 - Mascot Mr. Bunny: NEVER on data/charts (auth / empty / AI only).
 
+## Logo / wordmark (NEVER hand-type "Proxuma")
+
+The Proxuma wordmark is a LOGO ASSET, never styled text. Do NOT recreate it by typing
+"Proxuma" with a colored "Pro" and white "xuma", or any HTML/CSS/SVG text imitation — that
+produces an off-brand half-cyan/half-white blob. Always embed the real logo file.
+
+- Real assets bundled in `assets/logos/`: `proxuma-white.png` (962x283, transparent),
+  `proxuma-color.png`, `proxuma-black.png`, `proxuma-dxfferent.png` (combined Proxuma+Dxfferent),
+  `proxuma-mark-white.png` / `proxuma-mark-navy.png` (the bunny mark only), `proxuma-primary.svg`.
+- Easiest hermetic path: `assets/proxuma-logo.css` carries the logos as base64. Link it in the
+  HTML and drop `<span class="proxuma-logo proxuma-logo-white" style="width:150px"></span>`
+  (height auto-derives from the 962:283 aspect ratio). Or inline `<img alt="Proxuma" width="150"
+  src="data:image/png;base64,…">` from the same data.
+- **Dark backgrounds (hero, OG): use the WHITE logo.** Light backgrounds (in-body): COLOR or BLACK.
+- Keep it the real proportion (≈3.4:1); never stretch, recolor, add effects, or retype it.
+- The bunny mark (`proxuma-mark-*`) is for small icon spots only — NEVER on data/charts.
+- Every hero/OG/diagram that shows the brand name shows this logo. After rendering, eyeball the
+  logo region: if the wordmark looks like text instead of the real mark, it failed — re-render.
+
 ## Charts (the core — numbers are sacred)
 - Data charts come from a validated **Vega-Lite spec** bound to a real data table
   (`render_vega.sh`), never hand-placed numbers. Diagrams/callouts are HTML/CSS

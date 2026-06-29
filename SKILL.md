@@ -157,6 +157,8 @@ To prove the pipeline end-to-end without going near production state, run in **s
 - `assets/proxuma-tokens.css` — Proxuma Design System 2.0 colors + type tokens.
 - `assets/proxuma-fonts.css` — self-hosted Inter (base64 woff2) for chart HTML.
 - `assets/fonts/` — Inter woff2 (400/500/600/700).
+- `assets/proxuma-logo.css` — the REAL Proxuma wordmark as base64 (white/color/black). Link it and use `.proxuma-logo .proxuma-logo-white|-color|-black`. NEVER hand-type "Proxuma" as text — see house-style.md "Logo / wordmark".
+- `assets/logos/` — real logo files: `proxuma-white.png` (dark bg), `proxuma-color.png` / `proxuma-black.png` (light bg), `proxuma-dxfferent.png`, `proxuma-mark-white.png` / `proxuma-mark-navy.png` (bunny mark, icon spots only), `proxuma-primary.svg`.
 - `assets/vega-theme.json` — the Proxuma Vega config to merge into every data-chart spec.
 - `assets/scripts/parse_source.py` — the PARSE step.
 - `assets/scripts/render_vega.sh` — Vega-Lite spec to SVG + PNG (data charts).

@@ -76,6 +76,7 @@ PATH A — DATA CHARTS (anything plotting real values)
 
 PATH B — DIAGRAMS & CALLOUTS (flow, capture-vs-show, big-number comparisons, hero, OG card)
 - Build as themed HTML/CSS. ALL text via HTML boxes (flex/grid or <foreignObject>), never free SVG <text> over shapes. Load Inter from assets/proxuma-fonts.css. Reserved label zones; label plates behind anything near a line; collision pass to zero intersections + 8px buffer; terminal markers (check/X) in their own padded slot >=16px clear; captions OUTSIDE any card; 64px safe area; nothing clipped.
+- LOGO: if the visual shows the Proxuma wordmark (hero, OG, branded diagram), embed the REAL logo — NEVER type "Proxuma" as styled text (no cyan-"Pro" + white-"xuma" imitation). Link assets/proxuma-logo.css and use `<span class="proxuma-logo proxuma-logo-white" style="width:150px"></span>` — WHITE logo on the dark hero/OG, COLOR/BLACK on light in-body. Real files live in assets/logos/. See house-style.md "Logo / wordmark". Keep the real ~3.4:1 proportion; do not stretch or recolor.
 - Render: assets/scripts/render_png.sh <file>.html <W> <H>  (Playwright/Chrome headless at 2x). Then run assets/scripts/collision_check.py for the safe-area + collision report.
 
 NUMERIC RE-EXTRACTION GATE (both paths, mandatory)
@@ -87,6 +88,7 @@ RENDER + SELF-CHECK LOOP (per image, fix until all pass)
 [ ] Only navy / cyan / greyscale. No red, green, coral, orange.
 [ ] No text overlaps any mark; no clipping; nothing crosses the 64px safe area; card borders fully visible.
 [ ] Inter rendered (not a fallback); dark-hero / light-in-body consistent across the set.
+[ ] Any Proxuma wordmark is the REAL bundled logo (assets/proxuma-logo.css / assets/logos/), white-on-dark, color/black-on-light — NOT hand-typed text. Eyeball the logo region; if it reads as text, re-render.
 
 OUTPUT: ~/ClaudeCode/<SLUG>-images/ — per visual: the .vl.json spec (Path A) or .html source (Path B), the .svg, the .png (2x). Plus the numeric-gate report and contact-sheet.html (open it). Report each visual's path, role, render path, and gate result. Nothing pushed to WordPress.
 
