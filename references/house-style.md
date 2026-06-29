@@ -94,9 +94,26 @@ produces an off-brand half-cyan/half-white blob. Always embed the real logo file
 - After rendering, re-extract every figure and cite it to a source sentence, or mark it
   illustrative. Any unsourced or mismatched number fails the image.
 
+## Sharp + light (how visuals ship — vector in-body, sharp cards for hero/OG)
+
+Blurry letters/numbers come from rasterising — worst of all from JPEG (chroma subsampling
+smears text). The rule: **in-body visuals are never raster.**
+
+- **In-body data charts → inline SVG.** Vega already emits real vector `<text>` in Inter; the
+  SVG is sharper than any PNG AND usually smaller (a chart SVG is ~8-11KB vs ~20-30KB for the
+  WebP). Inline it into the post body — responsive (`width:100%;height:auto`, keep the viewBox),
+  selectable, screen-reader-readable, indexable. Do NOT export it to PNG/WebP/JPEG for the body.
+- **In-body diagrams/callouts → inline HTML/CSS** in the post body (self-contained inline styles,
+  Inter stack, fluid widths, the real logo via `assets/proxuma-logo.css`). Sharp text, tiny, reflows.
+- **Hero (featured) + OG card → the only raster files** (WordPress featured image + og:image need
+  a real file URL). Export them SHARP, never JPEG: hero = WebP `-q 90 -sharp_yuv`; OG = PNG
+  (quantise `-colors 256` only if needed). Render at exact size; don't upscale-then-downscale.
+- The PNGs from `render_png.sh` are for the contact sheet / preview only — they don't ship in-body.
+
 ## Images / rendering
-- Code-rendered SVG/HTML to PNG. `render_vega.sh` (vega-cli, node-canvas) for data charts;
-  `render_png.sh` (headless Chrome at 2x) for branded HTML diagrams/composites.
+- Code-rendered SVG/HTML. `render_vega.sh` (vega-cli) emits the chart **.svg** that gets inlined;
+  `render_png.sh` (headless Chrome at 2x) renders the hero/OG/diagram HTML to PNG for preview and
+  for the two raster cards.
 - Nano Banana: decoration ONLY (cool navy/cyan backgrounds, the cyan line-pattern motif),
   never a real number. Pattern-D composite (NB background + SVG chart overlaid via `sharp`)
   for the rare wow hero. Built via the isolated OpenRouter wrapper (phase-prompts Prompt 7).

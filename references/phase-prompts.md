@@ -50,7 +50,7 @@ STEPS
 3. Mirror the reference post meta exactly (copy values from <REF_TEMPLATE_ID>): show_c2a, hide_header, hide_footer, hide_breadcrumbs, source. EXCEPT set these two explicitly for E-E-A-T (do NOT copy the reference's blank values): reviewedby = 2 via `update_field('reviewedby', 2, <newid>)` (Jasper van Horssen, the expert reviewer), AND show_author = 1 via `update_field('show_author', 1, <newid>)`. show_author MUST be 1 — the theme renders the visible "✓ This article is reviewed by:" byline ONLY inside the `if($show_author)` block in single.php, so reviewedby alone is invisible without it. With show_author=1 the post shows the author (Max) and the reviewer (Jasper) — the intended author + expert-reviewer E-E-A-T pairing.
 4. Featured image: set the interim hero (the reference's hero) ONLY as a placeholder; the chart pipeline supplies the final hero. Flag that the final hero is still required. Do not invent or AI-generate a hero.
 5. Write the body via $wpdb->update on the new post ID. Re-read it back and confirm the divs/h2 survived (wpautop did not wrap them).
-6. Yoast: an SEO title + meta description, concise, featuring the article's key terms (for the MSP article: "AI-ready", "Autotask", "MSP"). Keep the post a DRAFT.
+6. Yoast: an SEO title (<=60 chars) + meta description (<=155 chars — count it; do not exceed, Google truncates past ~155), concise, featuring the article's key terms (e.g. "Autotask", "MSP", "margin"). Keep the post a DRAFT.
 7. Caches: wp cache flush && wp sg purge; Cloudflare purge is manual.
 8. VERIFY: open the draft preview, screenshot it, confirm: styled lede, all section headings, the pull-quote, the formatted checks, and the CTA card whose button matches the reference (the whitepaper link, unless the source article specified a different action). Report the new post ID, preview URL, and screenshot. Leave it as a draft.
 
@@ -94,7 +94,11 @@ RENDER + SELF-CHECK LOOP (per image, fix until all pass)
 [ ] Inter rendered (not a fallback); dark-hero / light-in-body consistent across the set.
 [ ] Any Proxuma wordmark is the REAL bundled logo (assets/proxuma-logo.css / assets/logos/), white-on-dark, color/black-on-light — NOT hand-typed text. Eyeball the logo region; if it reads as text, re-render.
 
-OUTPUT: ~/ClaudeCode/<SLUG>-images/ — per visual: the .vl.json spec (Path A) or .html source (Path B), the .svg, the .png (2x). Plus the numeric-gate report and contact-sheet.html (open it). Report each visual's path, role, render path, and gate result. Nothing pushed to WordPress.
+OUTPUT: ~/ClaudeCode/<SLUG>-images/ — per visual the source AND the artifact that gets used downstream:
+- In-body DATA CHARTS: keep the .vl.json spec + the rendered **.svg** — the SVG is what gets INLINED into the post (vector, sharp, light). The .png is for the contact sheet/preview only, never shipped in-body.
+- In-body DIAGRAMS/CALLOUTS: keep the **.html** source — it gets INLINED into the post body. The .png is preview-only.
+- HERO + OG card: keep the .html source + the **.png** (2x) — these two are the only raster files that ship (exported sharp in Prompt 5: WebP hero, PNG og, never JPEG).
+Plus the numeric-gate report and contact-sheet.html (open it). Report each visual's path, role, render path, and gate result. Nothing pushed to WordPress.
 
 TOOLING: render_vega.sh auto-installs vega/vega-lite/vega-cli via npx on first run.
 ```
@@ -126,27 +130,36 @@ PROCESS: back up the post's current post_content first. Write via $wpdb->update;
 
 ---
 
-## Prompt 5 — Image placement
+## Prompt 5 — Place visuals (in-body inline SVG/HTML, sharp hero+OG, internal links)
 
 ```
-TASK: Place the approved Proxuma data-viz images into the blog post, matching each image to its narrative position. Upload to WP media, set the featured image, insert in-body figures, set og:image. Runs AFTER the data-viz is approved.
+TASK: Place the approved Proxuma visuals into the blog post AND finish its on-page SEO. In-body charts/diagrams go in as inline SVG / inline HTML-CSS (sharp text, light, accessible) — NOT raster images. Only the featured hero and the og:image card are raster files. Also add the internal links. Runs AFTER the data-viz is approved.
 
-ACCESS: SSH + wp-cli per wp-access.md. Post <post id>. Images: final PNGs in ~/ClaudeCode/<SLUG>-images/.
-Gotchas: $wpdb->update for body edits (never wp_update_post). Guard wpautop. Verify with a screenshot.
+WHY INLINE: a Vega chart's SVG is real vector text — sharper than any PNG/JPEG and usually SMALLER. JPEG in particular smears letters/numbers (chroma subsampling). So in-body = vector/HTML; the only forced rasters (WP featured image + og:image need a real file URL) are exported sharp, never as JPEG.
 
-STEPS
-1. Inventory the image set. Confirm a hero (1200x630) + the in-body visuals exist.
-2. Upload to media: wp media import <file> --title=... --alt="...". Alt text: brand voice, sentence case, include the key figure.
-3. Featured hero: set the final hero, replacing any interim placeholder. Core wp-cli has NO `wp post thumbnail` command, so set the meta directly: `wp post meta update <id> _thumbnail_id <media-id>` (then verify it reads back). If this changes a live post's hero, call it out for Max.
-4. In-body placement: if the post already has in-body <img> tags, replace their src in the SAME position; else insert each as
-   <figure style="margin:32px 0;text-align:center"><img src="..." alt="..." style="max-width:100%;height:auto;border-radius:12px"><figcaption style="font:400 14px Inter;color:#5C5C71;margin-top:8px">caption</figcaption></figure>
-   at the matching narrative position (match by surrounding text).
-5. og:image: set Yoast social image (_yoast_wpseo_opengraph-image / -id) to the hero.
-6. Captions: short, brand voice, sentence case, Inter.
-7. Write via $wpdb->update; re-read and confirm wpautop did not wrap the figures. Caches: wp cache flush && wp sg purge.
-8. VERIFY: screenshot the post full-length. Confirm each image renders, right section, crisp (2x), featured + og:image set. Report screenshots, the media IDs, and any live-hero-replacement note.
+ACCESS: SSH + wp-cli per wp-access.md. Post <post id>. Source visuals in ~/ClaudeCode/<SLUG>-images/ (the .svg specs for charts, the .html sources for diagrams/hero/og).
+Gotchas: ALL body edits via $wpdb->update (never wp_update_post — it re-runs kses and strips inline SVG + styles). Guard wpautop after every write.
 
-GUARDRAILS: images only, no word or polish changes. The post stays a draft.
+A) IN-BODY CHARTS -> inline SVG (no upload, no raster)
+1. Take each data chart's .svg (from render_vega.sh). Make it responsive + sharp: remove any fixed width/height attributes, KEEP the viewBox, ensure the root <svg> carries style="width:100%;height:auto;max-width:760px" and font-family "Inter, 'Segoe UI', Arial, sans-serif" reaches its <text> (the site serves Inter). Strip the white background <rect> if the chart should sit on the page surface.
+2. Wrap each in a figure at the matching narrative position (match by surrounding text):
+   <figure role="img" aria-label="<key figure in a sentence>" style="margin:32px 0;text-align:center"><svg ... >...</svg><figcaption style="font:400 14px Inter,'Segoe UI',Arial,sans-serif;color:#5C5C71;margin-top:8px"><caption></figcaption></figure>
+
+B) IN-BODY DIAGRAMS / CALLOUTS -> inline HTML/CSS (no upload, no raster)
+3. Take each diagram's .html source and inline its markup into the body as a self-contained block: all styles inline on the elements (no external <style>/<link>), font-family Inter stack, fluid widths (%, max-width, flex/grid — NOT fixed px canvas), the real Proxuma logo via the base64 from assets/proxuma-logo.css if it shows the wordmark. Wrap as a <figure> with a <figcaption>. It must render correctly on the post's light surface and reflow on mobile.
+
+C) HERO (featured) + OG (social) -> the only raster files, exported SHARP
+4. Render hero + og at exact target size (no upscale-then-downscale). HERO: WebP at high quality for crisp text — `cwebp -q 90 -sharp_yuv <hero>.png -o hero.webp` (WebP is fine for an on-page <img>). OG: PNG, not JPEG — `magick <og>.png -resize 1200x630 -strip png/og.png` then quantize only if needed (`-colors 256` keeps text crisp on a flat card). NEVER JPEG for a card with text. Target hero <=120KB, og <=150KB; if a gradient pushes the hero over, prefer slightly bigger over blurry.
+5. Upload hero+og: `wp media import <file> --porcelain --title=... --alt="..."`. Featured: `wp post meta update <id> _thumbnail_id <hero-media-id>` (core wp-cli has NO `wp post thumbnail`); verify read-back; if replacing a live hero, flag it. og:image: set `_yoast_wpseo_opengraph-image` (URL) + `_yoast_wpseo_opengraph-image-id` (id). If the hero is ALSO used as an in-body <img> anywhere, give it width+height attributes and loading="lazy" (the featured thumbnail itself stays eager).
+
+D) INTERNAL LINKS (SEO)
+6. Add 2-3 contextual internal links to LIVE proxuma.io pages, wrapping EXISTING body words (no new sentences), each cyan #00B7FF. Verify each target returns 200 first (follow redirects — use the final canonical URL). Good defaults when relevant: /the-msp-market-is-doubling-to-847-billion/, /powerbi/insights/unprofitable-contracts/, the whitepaper /intelligent-msp-unlocking-ai-driven-growth-through-operational-excellence/.
+
+E) WRITE + VERIFY
+7. Write the body once via $wpdb->update. Re-read; confirm wpautop did NOT wrap the <figure>/<svg>/divs in <p> (the inline SVG especially — if wpautop mangled it, the write needs the figures kept as single blocks). Caches: wp cache flush && wp sg purge (Cloudflare manual).
+8. VERIFY: fetch the rendered the_content; confirm each inline SVG/HTML figure is present in the right section and is real vector/text (grep for <svg / the diagram markup, NOT an <img> to a chart). Confirm featured + og:image set and the og URL resolves 200. Report what went inline vs filed, the hero/og media IDs, the internal links added, and the wpautop result.
+
+GUARDRAILS: visuals + links only, no word or structure changes. The post stays a draft (publishing is Prompt 8, only on explicit go-live).
 ```
 
 ---
@@ -161,9 +174,9 @@ Access: SSH + wp-cli per wp-access.md. Verify public URLs with curl -sI (Cloudfl
 
 CHECKS
 1. Structure: the body matches the reference structure (lede, headings, pull-quote, check-cards, CTA). Diff the tag skeleton against the reference.
-2. Rendering: screenshot full-length. No broken layout; lede/pull-quote/check-cards/CTA on-brand (Inter, navy #164387, cyan #00B7FF); images present and crisp.
-3. Images: featured set; og:image resolves (check og:image meta). In-body figures in matching positions.
-4. SEO: Yoast title + meta description present; canonical correct; the slug is <EN_SLUG>.
+2. Rendering: screenshot full-length. No broken layout; lede/pull-quote/check-cards/CTA on-brand (Inter, navy #164387, cyan #00B7FF). In-body charts are inline SVG and diagrams inline HTML (sharp vector/text — grep the body for `<svg`/diagram markup; FAIL if a chart is a blurry `<img>` to a raster). Figures in matching positions with captions.
+3. Cards: featured hero set; og:image resolves (check the meta + URL 200). Both are sharp non-JPEG files (hero WebP, og PNG); text on them is crisp.
+4. SEO: Yoast title (<=60) + meta description present and **<=155 chars**; canonical correct; slug is <EN_SLUG>; 2-3 internal links present.
 5. Links: the CTA button link (the whitepaper page by default) and any in-body links return 200.
 6. Author + reviewer (E-E-A-T): post_author = 4 (Max de Kwaasteniet). Bart van der Meer (user 12) must appear NOWHERE — FAIL if "Bart van der Meer" is anywhere on the page. show_author = 1 and reviewedby = 2, so the rendered page shows the "✓ This article is reviewed by: Jasper van Horssen" byline AND Max as author. Confirm both names render and Bart does not.
 
@@ -186,4 +199,31 @@ IMPLEMENTATION: a standalone script that POSTs to https://openrouter.ai/api/v1/c
 USE: decoration only (Pattern D composite — Nano Banana paints a navy/cyan background, the deterministic Vega/SVG chart is overlaid with sharp; numbers stay vector-perfect). Never let Nano Banana render a figure.
 
 VERIFY: confirm no ANTHROPIC_* env vars exist; one test generation -> a saved PNG; confirm Claude Code still talks to Anthropic directly. Report the wrapper path, the gitignored env location, and the test image.
+```
+
+---
+
+## Prompt 8 — Publish (ONLY on an explicit go-live)
+
+> The build (Prompts 2-6) ends at a DRAFT. Run this ONLY when the operator's request says to take it live ("publish", "to live", "all the way to live"). On a plain build, do NOT run this — print the human checklist and stop.
+
+```
+TASK: Publish the finished, QA-passed draft <post id> to live on proxuma.io. Pre-checked, then flip to publish via $wpdb, then verify.
+
+PRE-PUBLISH GATE (all must hold; if any fails, STOP and report instead of publishing):
+- QA capstone (Prompt 6) passed.
+- post_author = 4 (Max), "Bart van der Meer" appears nowhere, reviewedby = 2, show_author = 1.
+- CTA button = the whitepaper link (unless the article named a different primary action).
+- Featured hero + og:image set and resolve 200; in-body charts are inline SVG/HTML (not blurry rasters); the wordmark is the real logo.
+- Yoast meta description <= 155 chars; slug correct; 2-3 internal links present and 200.
+
+PUBLISH (never wp_update_post — it strips the styled markup):
+1. Flip status + stamp the date via $wpdb directly:
+   $now = current_time('mysql'); $gmt = current_time('mysql', 1);
+   $wpdb->update($wpdb->posts, ['post_status'=>'publish','post_date'=>$now,'post_date_gmt'=>$gmt,'post_modified'=>$now,'post_modified_gmt'=>$gmt], ['ID'=><post id>]);
+   clean_post_cache(<post id>); do_action('save_post', <post id>, get_post(<post id>), true);
+2. Caches: wp cache flush && wp sg purge.
+3. VERIFY: get_permalink; confirm post_status=publish, the live URL returns 200, it is NOT noindex, post_content is intact (whitepaper button still present, body length unchanged). Open the live URL with bash `open` (NEVER claude-in-chrome).
+
+AFTER: print the one manual step left — Cloudflare dashboard -> Purge Everything (flushes the edge cache + og:image), plus an optional LinkedIn Post Inspector re-scrape. Do NOT purge Cloudflare yourself (SG CDN socket is unreachable from CLI). Report the live URL and the publish confirmation.
 ```

@@ -6,26 +6,29 @@ description: >-
   someone wants to publish, build, or draft a blog from an article or content package,
   says "proxuma blog", "build the blog from <file>", drops a Proxuma content-package HTML
   (the EN blog under section id="s1b"), or asks for a blog post on proxuma.io. It parses
-  the source, writes the draft, generates on-brand Proxuma data-viz, places images and the
-  og:image, and runs an independent QA capstone. It STOPS at a draft and never
-  auto-publishes: human review, publish, and the Cloudflare purge stay manual.
+  the source, writes the draft, generates on-brand Proxuma data-viz (charts as inline vector
+  SVG, diagrams as inline HTML, sharp hero+og), adds internal links, and runs an independent
+  QA capstone. It builds a DRAFT by default; it publishes ONLY when the request explicitly
+  says to take it live ("publish" / "to live"). The Cloudflare Purge stays manual.
 user-invocable: true
 ---
 
 # Proxuma Blog Pipeline
 
-Turn one source article into a finished **draft** blog post on proxuma.io: an English post,
-on-brand, with charts and og:image in place. A human reviews and publishes. This skill never
-publishes and never touches a live post's published state.
+Turn one source article into a finished blog post on proxuma.io: an English post, on-brand,
+in-body charts as sharp inline SVG + diagrams as inline HTML, a sharp hero + og:image, and
+internal links. The build ends at a **draft**; it goes live only on an explicit go-live.
 
 This packages a proven pipeline. The live reference post every new post mirrors is EN post
 **7055** (`/the-msp-market-is-doubling-to-847-billion/`).
 
 ## Hard rules (read first)
 
-- **Never publish.** The post stays `post_status=draft`. Flipping to publish, purging
-  Cloudflare, and the LinkedIn Post Inspector check are the human's job. Print the
-  checklist, then stop.
+- **Draft by default; publish only on an explicit go-live.** A plain build ends at
+  `post_status=draft` — print the human checklist and stop. Publish (Prompt 8) runs ONLY when
+  the request says to take it live ("publish" / "to live" / "all the way to live"), via
+  `$wpdb` (never `wp_update_post`). Cloudflare Purge Everything + the LinkedIn Post Inspector
+  check always stay manual.
 - **Never invent facts or figures.** Every number in a chart cites a source sentence from
   the article or is labelled "illustrative". Missing marketing copy gets flagged for a
   human, never written from thin air.
@@ -121,22 +124,25 @@ hand-SVG version, kept only for reference). Build 3 to 6 visuals into
 `~/ClaudeCode/<slug>-images/`:
 - **Data charts** (anything plotting real values): emit a Vega-Lite v5 spec bound to a JSON
   data table, merge `assets/vega-theme.json` into its `config`, then render with
-  `assets/scripts/render_vega.sh <spec>.vl.json 2`. Numbers come from the data, never from
-  pixels.
-- **Diagrams / callouts** (flow, capture-vs-show, big-number comparisons, hero, OG card):
-  themed HTML/CSS using `assets/proxuma-fonts.css` for Inter, rendered with
-  `assets/scripts/render_png.sh <file>.html <W> <H>`. Run `assets/scripts/collision_check.py`
-  for the 64px safe-area + collision pass.
+  `assets/scripts/render_vega.sh <spec>.vl.json 2`. The deliverable that ships is the **.svg**
+  (real vector Inter text — inlined in-body later, sharp + light). Numbers come from the data.
+- **Diagrams / callouts** (flow, capture-vs-show, big-number comparisons) and the **hero / OG**:
+  themed HTML/CSS using `assets/proxuma-fonts.css` for Inter (and `assets/proxuma-logo.css` for
+  the real wordmark), rendered with `assets/scripts/render_png.sh <file>.html <W> <H>`. Run
+  `assets/scripts/collision_check.py`. Diagrams ship as **inlined HTML**; hero/OG ship as sharp
+  raster files. The PNGs are for the contact sheet / preview, not for in-body.
 - **Numeric gate (mandatory):** after rendering, re-extract every figure in each image and
   cite it to a source sentence, or label it illustrative. Any unsourced or mismatched
   number fails the image; fix and re-render. Report the gate table.
 Nothing is pushed to WordPress here; this is Max's review set (open the contact sheet).
 
-### 4. Place images (one subagent, after 2 and 3)
+### 4. Place visuals + finish on-page SEO (one subagent, after 2 and 3)
 
-Use **Prompt 5**. Upload the approved PNGs to WP media (`wp media import`, alt text in brand
-voice with the key figure), set the featured hero (replacing any interim), insert in-body
-figures matched to sections by surrounding text, and set the **og:image** (Yoast social).
+Use **Prompt 5**. In-body **charts go in as inline SVG** and **diagrams as inline HTML/CSS**
+(sharp, light, accessible — NOT raster). Only the **hero (featured)** and **og:image card** are
+raster files, exported sharp (WebP `-q 90` hero, PNG og — never JPEG). Also add **2-3 contextual
+internal links** to live proxuma.io pages (wrapping existing words, each verified 200). All body
+edits via `$wpdb->update`, wpautop guarded.
 
 ### 5. QA capstone (one subagent, FRESH context)
 
@@ -145,15 +151,20 @@ build. It checks structure against the reference, images present and crisp, og:i
 resolves, and that links return 200, then writes a PASS/FAIL report. It changes no content;
 it only flags, and may fix purely mechanical things like a missing cache purge.
 
-### 6. Hand-off (you, in the main thread)
+### 6. Hand-off, or publish (you, in the main thread)
 
-Print the QA report and the short human publish-checklist:
+**Default (plain build):** print the QA report and the short human checklist, then STOP — do
+not publish, do not purge Cloudflare:
 1. Review the draft (preview URL).
 2. Publish the post.
 3. Cloudflare dashboard -> Purge Everything (covers the og:image and the new page).
 4. Optional: a LinkedIn Post Inspector check on the og:image.
 
-Then stop. Do not publish, do not purge Cloudflare.
+**On an explicit go-live** (the request said "publish" / "to live" / "all the way to live"):
+run **Prompt 8** — re-check the pre-publish gate, flip to `publish` via `$wpdb` (never
+`wp_update_post`), verify the live URL is 200 + indexable + markup intact, then `open` it with
+bash (never claude-in-chrome). Cloudflare Purge Everything stays the one manual step (the SG CDN
+socket is unreachable from CLI) — print that reminder.
 
 ## Safe dry-run mode
 
