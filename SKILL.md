@@ -85,6 +85,26 @@ summary shows the block count. If the file is not a content-package (no `s1b`), 
 falls back to parsing the whole body as one post. Decide the slug (mirror the live post's
 pattern: the English headline kebab-cased).
 
+### 1b. Pre-flight: does this article already exist? (do this yourself, BEFORE Phase 2)
+
+Never create a duplicate. Once you have the slug + title, check proxuma.io for an existing
+post/page, matching on BOTH slug and title (WordPress silently appends `-2` to a clashing
+slug, so a slug-only check misses near-duplicates):
+
+```
+# exact slug, any status
+wp post list --post_type=post,page --post_status=any --name=<slug> --field=ID
+# title match (catches a re-run that got a different slug)
+wp post list --post_type=post,page --post_status=any --fields=ID,post_status,post_title --format=csv \
+  | grep -iF "<distinctive title phrase>"
+```
+
+If either returns a hit, **STOP — do not build or create anything.** Report the existing
+post (ID, status, permalink) and ask the human which they want: update that post in place,
+publish under a new slug, or abort. Only when both checks come back empty do you proceed to
+Phase 2. (In safe dry-run mode the `-skilltest` slug sidesteps this, so the check still runs
+but a clash is near-impossible.)
+
 ### 2. Create the draft (one subagent)
 
 Use **Prompt 2** from `references/phase-prompts.md`. The draft is born polished off the live
